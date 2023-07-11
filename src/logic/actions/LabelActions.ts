@@ -1,6 +1,6 @@
 import {LabelsSelector} from '../../store/selectors/LabelsSelector';
 import {ImageData, LabelLine, LabelName, LabelPoint, LabelPolygon, LabelRect} from '../../store/labels/types';
-import {filter} from 'lodash';
+import {filter, last} from 'lodash';
 import {store} from '../../index';
 import {updateImageData, updateImageDataById} from '../../store/labels/actionCreators';
 import {LabelType} from '../../data/enums/LabelType';
@@ -93,10 +93,33 @@ export class LabelActions {
         store.dispatch(updateImageDataById(imageData.id, newImageData));
     }
 
+    public static setLabelVisibilityById(imageId: string, labelId: string, isVisible: boolean) {
+        const imageData: ImageData = LabelsSelector.getImageDataById(imageId);
+        const newImageData = {
+            ...imageData,
+            lastHiddenLabelId: labelId,
+            labelPoints: imageData.labelPoints.map((labelPoint: LabelPoint) => {
+                return labelPoint.id === labelId ? LabelUtil.setAnnotationVisibility(labelPoint, isVisible) : labelPoint
+            }),
+            labelRects: imageData.labelRects.map((labelRect: LabelRect) => {
+                return labelRect.id === labelId ? LabelUtil.setAnnotationVisibility(labelRect, isVisible) : labelRect
+            }),
+            labelPolygons: imageData.labelPolygons.map((labelPolygon: LabelPolygon) => {
+                return labelPolygon.id === labelId ? LabelUtil.setAnnotationVisibility(labelPolygon, isVisible) : labelPolygon
+            }),
+            labelLines: imageData.labelLines.map((labelLine: LabelLine) => {
+                return labelLine.id === labelId ? LabelUtil.setAnnotationVisibility(labelLine, isVisible) : labelLine
+            }),
+        };
+        console.log('lastHiddenLabelId', newImageData.lastHiddenLabelId);
+        store.dispatch(updateImageDataById(imageData.id, newImageData));
+    }
+
     public static toggleLabelVisibilityById(imageId: string, labelId: string) {
         const imageData: ImageData = LabelsSelector.getImageDataById(imageId);
         const newImageData = {
             ...imageData,
+            lastHiddenLabelId: labelId,
             labelPoints: imageData.labelPoints.map((labelPoint: LabelPoint) => {
                 return labelPoint.id === labelId ? LabelUtil.toggleAnnotationVisibility(labelPoint) : labelPoint
             }),

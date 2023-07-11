@@ -68,6 +68,20 @@ export class ImageActions {
     LabelActions.setAllLabelsVisibility(imageData.id, newToggleValue);
   }
 
+  public static hideActiveLabel(): void {
+    const imageData: ImageData = LabelsSelector.getActiveImageData();
+    const labelId: string = LabelsSelector.getActiveLabelId();
+
+    LabelActions.setLabelVisibilityById(imageData.id, labelId, false);
+  }
+
+  public static showLastHiddenLabel(): void {
+    const imageData: ImageData = LabelsSelector.getActiveImageData();
+    const labelId = imageData.lastHiddenLabelId
+    
+    LabelActions.setLabelVisibilityById(imageData.id, labelId, true);
+  }
+
   private static mapNewImageData(
     imageData: ImageData,
     labelIndex: number

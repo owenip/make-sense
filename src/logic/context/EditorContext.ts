@@ -175,5 +175,19 @@ export class EditorContext extends BaseContext {
                 EditorActions.fullRender();
             }
         },
+        {
+            keyCombo: ["i"],
+            action: (event: KeyboardEvent) => {
+                ImageActions.hideActiveLabel();
+                EditorActions.fullRender();
+            }
+        },
+        {
+            keyCombo: ["u"],
+            action: (event: KeyboardEvent) => {
+                ImageActions.showLastHiddenLabel();
+                EditorActions.fullRender();
+            }
+        }
     ];
 }

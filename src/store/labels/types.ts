@@ -50,6 +50,7 @@ export type ImageData = {
     labelNameIds: string[];
 
     allLabelsVisibilityToggle: boolean;
+    lastHiddenLabelId: string;
 
     // YOLO
     isVisitedByYOLOObjectDetector: boolean;
